@@ -14,11 +14,21 @@ wsServer.on('connection', (ws) => {
     let messageId;
 
     switch (type) {
+      case 'connect': {
+        if (payload.channelId) {
+          ws.channelId = payload.channelId;
+        }
+
+        break;
+      }
       case 'message': {
         messageId = Date.now();
 
         wsServer.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
+          if (
+            client.channelId === payload.channelId &&
+            client.readyState === WebSocket.OPEN
+          ) {
             client.send(
               JSON.stringify({
                 type: 'message',
