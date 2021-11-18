@@ -4,6 +4,7 @@ import axios from 'axios';
 
 dotenv.config();
 
+// eslint-disable-next-line no-undef
 const wsServer = new WebSocketServer({ port: process.env.WS_PORT });
 
 wsServer.on('connection', (ws) => {
@@ -49,22 +50,6 @@ wsServer.on('connection', (ws) => {
         });
 
         messageId = undefined;
-        break;
-      }
-      case 'typing': {
-        wsServer.clients.forEach((client) => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(
-              JSON.stringify({
-                type: 'typing',
-                payload: {
-                  user: { name: payload.currentUser.name },
-                },
-              })
-            );
-          }
-        });
-
         break;
       }
       default: {
